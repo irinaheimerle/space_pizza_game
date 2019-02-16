@@ -4,8 +4,11 @@
     "browser":true,
     "devel":true,
     "globals":{
-        "createjs" : false,
+        "createjs":false,
+        "manifest":true,
         "AssetManager":false,
-        "manifest":true
+        "Mover":false,
+        "spritesheet":true,
+        "Astronaut":true
     }
 }
