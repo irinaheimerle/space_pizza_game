@@ -18,50 +18,54 @@
     let astronaut;
     let asteroid;
     let background;
+    let openingScreen;
     
     // event handlers
     function onReady(e) {
         console.log("setting up game");
         e.remove();
 
-        background = assetManager.getSprite("spritesheet");
-        background.gotoAndPlay("background");
-        stage.addChild(background);
+        openingScreen = assetManager.getSprite("spritesheet");
+        openingScreen.gotoAndPlay("openingScreen");
+        openingScreen.x = 0;
+        openingScreen.y = 0;
+        stage.addChild(openingScreen);
         
-        //construct game objects
-        astronaut = new Astronaut(stage, assetManager);
+        
+        // //construct game objects
+        // astronaut = new Astronaut(stage, assetManager);
         
         
-        let asteroid = assetManager.getSprite("spritesheet");
+        // let asteroid = assetManager.getSprite("spritesheet");
 
-        asteroid.gotoAndStop("asteroidExplosion");
+        // asteroid.gotoAndStop("asteroidExplosion");
 
-        asteroid.x = 100;
-        asteroid.y = 100;
+        // asteroid.x = 100;
+        // asteroid.y = 100;
 
-        let asteroid1 = assetManager.getSprite("spritesheet");
+        // let asteroid1 = assetManager.getSprite("spritesheet");
 
-        asteroid1.gotoAndStop("asteroidExplosion");
+        // asteroid1.gotoAndStop("asteroidExplosion");
 
-        asteroid1.x = 300;
-        asteroid1.y = 300;
+        // asteroid1.x = 300;
+        // asteroid1.y = 300;
         
-        stage.addChild(asteroid);
-        stage.addChild(asteroid1);
+        // // stage.addChild(asteroid);
+        // // stage.addChild(asteroid1);
 
-        // startup the ticker
+        // // startup the ticker
         createjs.Ticker.framerate = FRAME_RATE;
         createjs.Ticker.on("tick", onTick);
 
-        // current state of keys
-        leftKey = false;
-        rightKey = false;
-        upKey = false;
-        downKey = false;
+        // // current state of keys
+        // leftKey = false;
+        // rightKey = false;
+        // upKey = false;
+        // downKey = false;
 
-        // setup event listeners for keyboard keys
-        document.onkeydown = onKeyDown;
-        document.onkeyup = onKeyUp;
+        // // setup event listeners for keyboard keys
+        // document.onkeydown = onKeyDown;
+        // document.onkeyup = onKeyUp;
     }
 
     function onKeyDown(e) {
@@ -83,19 +87,19 @@
     function onTick() {
         document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
 
-        if (leftKey) {
-            astronaut.startMe(Mover.LEFT);
-        } else if (rightKey) {
-            astronaut.startMe(Mover.RIGHT);
-        } else if (upKey) {
-            astronaut.startMe(Mover.UP);
-        } else if (downKey) {
-            astronaut.startMe(Mover.DOWN);
-        } else {
-            astronaut.stopMe();
-        }
+        // if (leftKey) {
+        //     astronaut.startMe(Mover.LEFT);
+        // } else if (rightKey) {
+        //     astronaut.startMe(Mover.RIGHT);
+        // } else if (upKey) {
+        //     astronaut.startMe(Mover.UP);
+        // } else if (downKey) {
+        //     astronaut.startMe(Mover.DOWN);
+        // } else {
+        //     astronaut.stopMe();
+        // }
 
-        astronaut.updateMe();
+        //astronaut.updateMe();
 
         stage.update();
     }
