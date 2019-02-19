@@ -9,6 +9,8 @@
         "AssetManager":false,
         "Mover":false,
         "spritesheet":true,
-        "Astronaut":true
+        "Astronaut":true,
+        "UserInterface":true,
+        "Pizza":true
     }
 }

@@ -10,6 +10,10 @@ class Mover {
         this._moving = false;
         this._stage = stage;
 
+        this._heightConstraintLow = 100;
+        this._heightConstraintHigh = 250;
+        this._widthConstraint = 0;
+
         // sprite not animating on construction
         sprite.stop();
     }
@@ -53,11 +57,11 @@ class Mover {
             // get current width of sprite on this frame
             // we only need to concern ourselves with width in terms of off stage since we rotate sprite up, down, left, and right
             let width = sprite.getBounds().width;
-
+            
             if (this._direction == Mover.LEFT) {
                 // moving left
-                sprite.scaleX = 1;
-                sprite.rotation = 0;
+                //sprite.scaleX = 1;
+                //sprite.rotation = 0;
                 sprite.x = sprite.x - this._speed;
                 if (sprite.x < -width) {
                     sprite.x = this._stage.canvas.width;
@@ -66,8 +70,8 @@ class Mover {
 
             } else if (this._direction == Mover.RIGHT) {
                 // moving right
-                sprite.scaleX = -1;
-                sprite.rotation = 0;
+                //sprite.scaleX = -1;
+                //sprite.rotation = 0;
                 sprite.x = sprite.x + this._speed;
                 if (sprite.x > (this._stage.canvas.width + width)) {
                     sprite.x = -width;
@@ -76,9 +80,15 @@ class Mover {
 
             } else if (this._direction == Mover.UP) {
                 // moving up
-                sprite.scaleX = 1;
-                sprite.rotation = 90;
-                sprite.y = sprite.y - this._speed;
+                //sprite.scaleX = 1;
+                //sprite.rotation = 90;
+
+                //console.log(sprite.y);
+                
+                if(sprite.y >= this._heightConstraintLow) sprite.y = sprite.y - this._speed;
+                
+                
+                
                 if (sprite.y < -width) {
                     sprite.y = this._stage.canvas.height;
                     sprite.dispatchEvent(this._eventStageExit);
@@ -86,9 +96,9 @@ class Mover {
 
             } else if (this._direction == Mover.DOWN) {
                 // moving down
-                sprite.scaleX = 1;
-                sprite.rotation = -90;
-                sprite.y = sprite.y + this._speed;
+                //sprite.scaleX = 1;
+                //sprite.rotation = -90;
+                if(sprite.y <= this._heightConstraintHigh) sprite.y = sprite.y + this._speed;
                 if (sprite.y > (this._stage.canvas.height + width)) {
                     sprite.y = -width;
                     sprite.dispatchEvent(this._eventStageExit);

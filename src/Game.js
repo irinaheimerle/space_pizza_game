@@ -19,53 +19,76 @@
     let asteroid;
     let background;
     let openingScreen;
+    let btnPlay;
+    let pizza;
     
     // event handlers
     function onReady(e) {
         console.log("setting up game");
         e.remove();
 
-        openingScreen = assetManager.getSprite("spritesheet");
-        openingScreen.gotoAndPlay("openingScreen");
-        openingScreen.x = 0;
-        openingScreen.y = 0;
-        stage.addChild(openingScreen);
+        //opening screen set up / btnPlay set up
+        // openingScreen = new UserInterface(stage,assetManager, 'screen');
+
+        // btnPlay = assetManager.getSprite("spritesheet");
+        // btnPlay.gotoAndStop("playUp");
+        // btnPlay.x = -100;
+        // btnPlay.y = 100;
+        // let hitAreaSprite = assetManager.getSprite("spritesheet");
+        // btnPlay.buttonHelper = new createjs.ButtonHelper(btnPlay, "playUp", "playOver", 
+        // "playOver", false, hitAreaSprite, "playOver");
+        // btnPlay.active = false;
+        // stage.addChild(btnPlay);
+
+        // btnPlay.on("click", startGame);
+
+        startGame(e);
         
-        
-        // //construct game objects
-        // astronaut = new Astronaut(stage, assetManager);
-        
-        
-        // let asteroid = assetManager.getSprite("spritesheet");
-
-        // asteroid.gotoAndStop("asteroidExplosion");
-
-        // asteroid.x = 100;
-        // asteroid.y = 100;
-
-        // let asteroid1 = assetManager.getSprite("spritesheet");
-
-        // asteroid1.gotoAndStop("asteroidExplosion");
-
-        // asteroid1.x = 300;
-        // asteroid1.y = 300;
-        
-        // // stage.addChild(asteroid);
-        // // stage.addChild(asteroid1);
-
         // // startup the ticker
         createjs.Ticker.framerate = FRAME_RATE;
         createjs.Ticker.on("tick", onTick);
 
-        // // current state of keys
-        // leftKey = false;
-        // rightKey = false;
-        // upKey = false;
-        // downKey = false;
+    }
 
-        // // setup event listeners for keyboard keys
-        // document.onkeydown = onKeyDown;
-        // document.onkeyup = onKeyUp;
+    function startGame(e) {
+        //stage.removeChild(openingScreen, btnPlay);
+        background = new UserInterface(stage, assetManager, "background");
+
+        // remove click event on background
+        e.remove();
+
+        astronaut = new Astronaut(stage, assetManager);
+        
+        
+        asteroid = assetManager.getSprite("spritesheet");
+
+        asteroid.gotoAndStop("asteroidExplosion");
+
+        asteroid.x = 100;
+        asteroid.y = 100;
+
+        let asteroid1 = assetManager.getSprite("spritesheet");
+
+        asteroid1.gotoAndStop("asteroidExplosion");
+
+        asteroid1.x = 300;
+        asteroid1.y = 300;
+        
+        stage.addChild(asteroid);
+        stage.addChild(asteroid1);
+        
+
+        pizza = new Pizza(stage, assetManager, astronaut);
+
+        // current state of keys
+        leftKey = false;
+        rightKey = false;
+        upKey = false;
+        downKey = false;
+
+        // setup event listeners for keyboard keys
+        document.onkeydown = onKeyDown;
+        document.onkeyup = onKeyUp;
     }
 
     function onKeyDown(e) {
@@ -86,20 +109,15 @@
 
     function onTick() {
         document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
-
-        // if (leftKey) {
-        //     astronaut.startMe(Mover.LEFT);
-        // } else if (rightKey) {
-        //     astronaut.startMe(Mover.RIGHT);
-        // } else if (upKey) {
-        //     astronaut.startMe(Mover.UP);
-        // } else if (downKey) {
-        //     astronaut.startMe(Mover.DOWN);
-        // } else {
-        //     astronaut.stopMe();
-        // }
-
-        //astronaut.updateMe();
+        
+        if (leftKey) astronaut.startMe(Mover.LEFT);
+        else if (rightKey) astronaut.startMe(Mover.RIGHT);
+        else if (upKey) astronaut.startMe(Mover.UP);
+        else if (downKey) astronaut.startMe(Mover.DOWN);
+        else astronaut.stopMe();
+        
+        astronaut.updateMe();
+        pizza.updateMe();
 
         stage.update();
     }
@@ -110,8 +128,8 @@
         //get reference to canvas
         canvas = document.getElementById("myCanvas");
         //set canvas to as wide/high
-        canvas.width = 1000;
-        canvas.height = 600;
+        canvas.width = 640;
+        canvas.height = 480;
 
         //create stage object
         stage = new createjs.StageGL(canvas);
