@@ -75,6 +75,8 @@ class Mover {
                 sprite.x = sprite.x + this._speed;
                 if (sprite.x > (this._stage.canvas.width + width)) {
                     sprite.x = -width;
+                    
+                    //maybe switch backgrounds?
                     sprite.dispatchEvent(this._eventStageExit);
                 }
 
@@ -83,11 +85,8 @@ class Mover {
                 //sprite.scaleX = 1;
                 //sprite.rotation = 90;
 
-                //console.log(sprite.y);
-                
+                //height constraints will limit astronauts movement
                 if(sprite.y >= this._heightConstraintLow) sprite.y = sprite.y - this._speed;
-                
-                
                 
                 if (sprite.y < -width) {
                     sprite.y = this._stage.canvas.height;
@@ -98,6 +97,8 @@ class Mover {
                 // moving down
                 //sprite.scaleX = 1;
                 //sprite.rotation = -90;
+                
+                //height constraints will limit astronauts movement
                 if(sprite.y <= this._heightConstraintHigh) sprite.y = sprite.y + this._speed;
                 if (sprite.y > (this._stage.canvas.height + width)) {
                     sprite.y = -width;

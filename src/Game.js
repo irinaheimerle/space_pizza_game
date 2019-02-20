@@ -12,6 +12,10 @@
     let rightKey = false;
     // frame rate of game
     const FRAME_RATE = 26;
+
+    
+    //did the astronaut catch any pizza?
+    let pizzaCaught = 0;
     
     // game objects
     let assetManager;
@@ -57,27 +61,10 @@
         // remove click event on background
         e.remove();
 
+        //create astronaut object
         astronaut = new Astronaut(stage, assetManager);
         
-        
-        asteroid = assetManager.getSprite("spritesheet");
-
-        asteroid.gotoAndStop("asteroidExplosion");
-
-        asteroid.x = 100;
-        asteroid.y = 100;
-
-        let asteroid1 = assetManager.getSprite("spritesheet");
-
-        asteroid1.gotoAndStop("asteroidExplosion");
-
-        asteroid1.x = 300;
-        asteroid1.y = 300;
-        
-        stage.addChild(asteroid);
-        stage.addChild(asteroid1);
-        
-
+        //create new pizza object
         pizza = new Pizza(stage, assetManager, astronaut);
 
         // current state of keys
@@ -109,16 +96,20 @@
 
     function onTick() {
         document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
-        
+
+        //for moving astronaut
         if (leftKey) astronaut.startMe(Mover.LEFT);
         else if (rightKey) astronaut.startMe(Mover.RIGHT);
         else if (upKey) astronaut.startMe(Mover.UP);
         else if (downKey) astronaut.startMe(Mover.DOWN);
+        //else stop the astronaut
         else astronaut.stopMe();
         
+        //always check update me for both astronaut and pizza
         astronaut.updateMe();
         pizza.updateMe();
 
+        //and always update the stage
         stage.update();
     }
 
