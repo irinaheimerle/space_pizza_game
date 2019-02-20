@@ -2,6 +2,7 @@ class UserInterface {
     constructor(stage, assetManager, type) {
         //this local stage will point to the passed in stage
         this._stage = stage;
+        UserInterface.levelStart = false;
         
         //build sprite based on type
         if(type == 'background')  {
@@ -16,6 +17,16 @@ class UserInterface {
             this._sprite.x = 0;
             this._sprite.y = 0;
             this._stage.addChild(this._sprite);
+            
+        } else if(type == 'label') {
+            //this._txtLevel = new createjs.BitmapText("0", assetManager.getSpriteSheet("spritesheet"));
+            this._sprite = assetManager.getSprite("spritesheet");
+            //TO-DO: swap this out depending on current level
+            this._sprite.gotoAndPlay("level1");
+            this._sprite.x = 0;
+            this._sprite.y = 5;
+            this._stage.addChild(this._sprite);
+            UserInterface.levelStart = true;
             
         }
     }

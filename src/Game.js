@@ -20,11 +20,14 @@
     // game objects
     let assetManager;
     let astronaut;
-    let asteroid;
-    let background;
-    let openingScreen;
-    let btnPlay;
+    let level1;
     let pizza;
+    let background;
+
+    //TO ADD BACK INTO THE GAME
+    // let openingScreen;
+    // let btnPlay;
+    //let asteroid;
     
     // event handlers
     function onReady(e) {
@@ -46,6 +49,9 @@
 
         // btnPlay.on("click", startGame);
 
+        //make label depedning for first level
+        level1 = new UserInterface(stage, assetManager, "label");
+        
         startGame(e);
         
         // // startup the ticker
@@ -76,6 +82,8 @@
         // setup event listeners for keyboard keys
         document.onkeydown = onKeyDown;
         document.onkeyup = onKeyUp;
+
+        //if(UserInterface.levelStart) stage.removeChild(level1);
     }
 
     function onKeyDown(e) {

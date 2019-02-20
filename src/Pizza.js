@@ -20,6 +20,12 @@ class Pizza {
 
         //add to the stage
         this._stage.addChild(this._sprite);
+
+        this._firstLevel = false;
+        this._secondLevel = false;
+        this._thirdLevel = false;
+
+        this._pizzaSlices = 0;
     }
 
     // Custom functions for class
@@ -42,5 +48,11 @@ class Pizza {
 
     _burntPizza() {
         //recycle pizza, put back in loop for next level
+    }
+
+    _setUpMe() {
+        if(this._firstLevel) this._pizzaSlices = 4;
+        else if(this._secondLevel) this._pizzaSlices = 6;
+        else if(this._thirdLevel) this._pizzaSlices = 8;
     }
 }

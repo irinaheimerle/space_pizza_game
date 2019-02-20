@@ -19,12 +19,6 @@ class Astronaut {
         stage.addChild(this._sprite);
     }
 
-
-    test() {
-        return this._sprite.getBounds();
-    }
-
-
     startMe(direction) {
         this._sprite.mover.direction = direction;
         if (!this._sprite.mover.moving) {
@@ -44,12 +38,11 @@ class Astronaut {
     }
 
     //get / set methods
-    get sprite() {
-        return this._sprite;
-    }
+    get sprite() {return this._sprite;}
+    
 
-    resetMe() {
+    // resetMe() {
         
         
-    }
+    // }
 }
