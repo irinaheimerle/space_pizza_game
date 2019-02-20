@@ -32,13 +32,13 @@ class Pizza {
     updateMe() {
         //TO-DO: add collision detection
         // //let point = this._astronautSprite.globalToLocal(this._sprite.x, this._sprite.y);
-        // let pt = this._astronautSprite.globalToLocal(this._sprite.x, this._sprite.y);
-        // if (this._astronautSprite.hitTest(pt.x, pt.y)) {
-        //     console.log("collision!");
-        //     // collision detection with snake
-        //     //this._sprite.dispatchEvent(this._pizzaCaught);
-        //     //this._burntPizza();
-        // }
+        let pt = this._astronautSprite.globalToLocal(this._sprite.x, this._sprite.y);
+        if (this._astronautSprite.hitTest(pt.x, pt.y)) {
+            console.log("collision!");
+            // collision detection with snake
+            //this._sprite.dispatchEvent(this._pizzaCaught);
+            //this._burntPizza();
+        }
     }
 
     //"private" functions

@@ -50,7 +50,7 @@
         // btnPlay.on("click", startGame);
 
         //make label depedning for first level
-        level1 = new UserInterface(stage, assetManager, "label");
+        //level1 = new UserInterface(stage, assetManager, "label");
         
         startGame(e);
         
