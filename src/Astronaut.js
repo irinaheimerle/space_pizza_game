@@ -1,6 +1,7 @@
 class Astronaut {
     constructor(stage, assetManager) {
         // grab clip for Snake and add to stage canvas
+        this._stage = stage;
         this._sprite = assetManager.getSprite("spritesheet");
 
         this._sprite.gotoAndPlay("generalAnimation");
@@ -15,8 +16,12 @@ class Astronaut {
 
         //console.log(this._sprite.getBounds());
         
-        this._sprite.mover = new Mover(this._sprite, stage);
-        stage.addChild(this._sprite);
+        this._sprite.mover = new Mover(this._sprite, this._stage);
+        //stage.addChild(this._sprite);
+    }
+
+    setUpMe() {
+        this._stage.addChild(this._sprite);
     }
 
     startMe(direction) {

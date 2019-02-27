@@ -13,16 +13,22 @@
     // frame rate of game
     const FRAME_RATE = 26;
 
-    
-    //did the astronaut catch any pizza?
-    let pizzaCaught = 0;
-    
     // game objects
     let assetManager;
     let astronaut;
-    let level1;
-    let pizza;
+    let pizzaCaught = 0;
     let background;
+    let btnPlay;
+    let level1;
+    let openingScreen;
+
+    let pizzaMax = 0;
+    let firstLevel = false;
+    let secondLevel = false;
+    let thirdLevel = false;
+    let pizzaSlices = [];
+
+    let levelOver = new createjs.Event("levelOver", true);
 
     //TO ADD BACK INTO THE GAME
     // let openingScreen;
@@ -35,24 +41,24 @@
         e.remove();
 
         //opening screen set up / btnPlay set up
-        // openingScreen = new UserInterface(stage,assetManager, 'screen');
+        openingScreen = new UserInterface(stage,assetManager, 'screen');
 
-        // btnPlay = assetManager.getSprite("spritesheet");
-        // btnPlay.gotoAndStop("playUp");
-        // btnPlay.x = -100;
-        // btnPlay.y = 100;
-        // let hitAreaSprite = assetManager.getSprite("spritesheet");
-        // btnPlay.buttonHelper = new createjs.ButtonHelper(btnPlay, "playUp", "playOver", 
-        // "playOver", false, hitAreaSprite, "playOver");
-        // btnPlay.active = false;
-        // stage.addChild(btnPlay);
+        btnPlay = assetManager.getSprite("spritesheet");
+        btnPlay.gotoAndStop("playUp");
+        btnPlay.x = -100;
+        btnPlay.y = 100;
+        let hitAreaSprite = assetManager.getSprite("spritesheet");
+        btnPlay.buttonHelper = new createjs.ButtonHelper(btnPlay, "playUp", "playOver", 
+        "playOver", false, hitAreaSprite, "playOver");
+        btnPlay.active = false;
+        stage.addChild(btnPlay);
 
-        // btnPlay.on("click", startGame);
+        btnPlay.on("click", startGame, firstLevel = true);
 
-        //make label depedning for first level
-        //level1 = new UserInterface(stage, assetManager, "label");
+        //create astronaut object
+        astronaut = new Astronaut(stage, assetManager);
         
-        startGame(e);
+        stage.on("pizzaCaught", onPizzaCaught);
         
         // // startup the ticker
         createjs.Ticker.framerate = FRAME_RATE;
@@ -61,17 +67,19 @@
     }
 
     function startGame(e) {
-        //stage.removeChild(openingScreen, btnPlay);
+        openingScreen.hideMe();
+        stage.removeChild(btnPlay);
         background = new UserInterface(stage, assetManager, "background");
+        astronaut.setUpMe();
 
+        if(firstLevel) pizzaMax = 2;
+
+        for(let x=0; x<pizzaMax; x++) pizzaSlices.push(new Pizza(stage, assetManager, astronaut));
+        console.log(pizzaSlices);
+        for(let slice of pizzaSlices) slice.setUpMe(pizzaSlices.indexOf(slice));
+        
         // remove click event on background
         e.remove();
-
-        //create astronaut object
-        astronaut = new Astronaut(stage, assetManager);
-        
-        //create new pizza object
-        pizza = new Pizza(stage, assetManager, astronaut);
 
         // current state of keys
         leftKey = false;
@@ -83,7 +91,19 @@
         document.onkeydown = onKeyDown;
         document.onkeyup = onKeyUp;
 
-        //if(UserInterface.levelStart) stage.removeChild(level1);
+    }
+
+    function onPizzaCaught() {
+        pizzaCaught++;
+        // /console.log(pizzaCaught);
+        if(pizzaCaught == 2) {
+            stage.dispatchEvent("levelOver");
+            onLevelOver();
+        }
+    }
+
+    function onLevelOver() {
+        console.log("level over!!!" + pizzaCaught);
     }
 
     function onKeyDown(e) {
@@ -113,10 +133,17 @@
         //else stop the astronaut
         else astronaut.stopMe();
         
+
+        //for(let pizza of pizzaSlices) pizza.updateMe();
+
+
         //always check update me for both astronaut and pizza
         astronaut.updateMe();
-        pizza.updateMe();
 
+        for(let slice of pizzaSlices) slice.updateMe();
+
+        //pizza.updateMe();
+        
         //and always update the stage
         stage.update();
     }

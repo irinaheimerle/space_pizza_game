@@ -7,38 +7,51 @@ class Pizza {
         //create an astronaut sprite
         this._astronautSprite = astronaut.sprite;
 
+        //construct custom event objects
+        this._eventPizzaCaught = new createjs.Event("pizzaCaught", true);
+
         //get spritesheet for sprite
         this._sprite = assetManager.getSprite("spritesheet");
         //locate main animation / sprite
         this._sprite.gotoAndStop("pizza");
-        //eventually this will be moved to a "setup me"
-        this._sprite.x = 100;
-        this._sprite.y = 100;
 
         //this pizza will eventually move
         //this._sprite.mover = new Mover(this._sprite, stage);
 
         //add to the stage
-        this._stage.addChild(this._sprite);
-
-        this._firstLevel = false;
-        this._secondLevel = false;
-        this._thirdLevel = false;
-
-        this._pizzaSlices = 0;
+        //this._stage.addChild(this._sprite);
     }
 
     // Custom functions for class
     updateMe() {
-        //TO-DO: add collision detection
-        // //let point = this._astronautSprite.globalToLocal(this._sprite.x, this._sprite.y);
-        let pt = this._astronautSprite.globalToLocal(this._sprite.x, this._sprite.y);
-        if (this._astronautSprite.hitTest(pt.x, pt.y)) {
-            console.log("collision!");
-            // collision detection with snake
-            //this._sprite.dispatchEvent(this._pizzaCaught);
-            //this._burntPizza();
+        let a = this._astronautSprite.x - this._sprite.x;
+        let b = this._astronautSprite.y - this._sprite.y;
+        let c = Math.sqrt((a * a) + (b * b));
+
+        if(c >= 112) {
+            this._sprite.dispatchEvent(this._eventPizzaCaught);
+            this._burntPizza();
+        } 
+        
+    }
+
+    setUpMe(index) {
+        if(index == 0) {
+            this._sprite.x = 25;
+            this._sprite.y = 15;
+        } else if(index == 1) {
+            this._sprite.x = 100;
+            this._sprite.y = 150;
+        } else if(index == 2) {
+            this._sprite.x = 100;
+            this._sprite.y = 100;
+        } else if(index == 3) {
+            this._sprite.x = 10;
+            this._sprite.y = 10;
         }
+
+        this._stage.addChild(this._sprite);
+        
     }
 
     //"private" functions
@@ -48,11 +61,8 @@ class Pizza {
 
     _burntPizza() {
         //recycle pizza, put back in loop for next level
+        this._stage.removeChild(this._sprite);
     }
 
-    _setUpMe() {
-        if(this._firstLevel) this._pizzaSlices = 4;
-        else if(this._secondLevel) this._pizzaSlices = 6;
-        else if(this._thirdLevel) this._pizzaSlices = 8;
-    }
+    
 }
