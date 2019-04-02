@@ -21,6 +21,8 @@
     let btnPlay;
     let level1;
     let openingScreen;
+    let displaySlices;
+    let sliceExists = false;
 
     let pizzaMax = 0;
     let firstLevel = false;
@@ -53,6 +55,10 @@
         btnPlay.active = false;
         stage.addChild(btnPlay);
 
+        displaySlices = assetManager.getSprite("spritesheet");
+        displaySlices.x = 250;
+        displaySlices.y = -150;
+
         btnPlay.on("click", startGame, firstLevel = true);
 
         //create astronaut object
@@ -72,10 +78,9 @@
         background = new UserInterface(stage, assetManager, "background");
         astronaut.setUpMe();
 
-        if(firstLevel) pizzaMax = 2;
-
+        if(firstLevel) pizzaMax = 4;
+        
         for(let x=0; x<pizzaMax; x++) pizzaSlices.push(new Pizza(stage, assetManager, astronaut));
-        console.log(pizzaSlices);
         for(let slice of pizzaSlices) slice.setUpMe(pizzaSlices.indexOf(slice));
         
         // remove click event on background
@@ -95,11 +100,21 @@
 
     function onPizzaCaught() {
         pizzaCaught++;
-        // /console.log(pizzaCaught);
-        if(pizzaCaught == 2) {
-            stage.dispatchEvent("levelOver");
-            onLevelOver();
+        
+        if(sliceExists == false) {
+            displaySlices.gotoAndStop(`slice${pizzaCaught}`);
+            stage.addChild(displaySlices);
+            sliceExists = true;
+        } else {
+            stage.removeChild(displaySlices);
+            displaySlices.gotoAndStop(`slice${pizzaCaught}`);
+            stage.addChild(displaySlices);
         }
+
+        // if(pizzaCaught == 2) {
+        //     stage.dispatchEvent("levelOver");
+        //     onLevelOver();
+        // }
     }
 
     function onLevelOver() {
@@ -133,17 +148,10 @@
         //else stop the astronaut
         else astronaut.stopMe();
         
-
-        //for(let pizza of pizzaSlices) pizza.updateMe();
-
-
-        //always check update me for both astronaut and pizza
         astronaut.updateMe();
 
         for(let slice of pizzaSlices) slice.updateMe();
 
-        //pizza.updateMe();
-        
         //and always update the stage
         stage.update();
     }

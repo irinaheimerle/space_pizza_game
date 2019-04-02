@@ -28,28 +28,18 @@ class Pizza {
         let b = this._astronautSprite.y - this._sprite.y;
         let c = Math.sqrt((a * a) + (b * b));
 
-        if(c >= 112) {
+        if(c >= 120) {
             this._sprite.dispatchEvent(this._eventPizzaCaught);
             this._burntPizza();
-        } 
-        
+        }
     }
 
-    setUpMe(index) {
-        if(index == 0) {
-            this._sprite.x = 25;
-            this._sprite.y = 15;
-        } else if(index == 1) {
-            this._sprite.x = 100;
-            this._sprite.y = 150;
-        } else if(index == 2) {
-            this._sprite.x = 100;
-            this._sprite.y = 100;
-        } else if(index == 3) {
-            this._sprite.x = 10;
-            this._sprite.y = 10;
-        }
+    randomize(high, low) {return Math.round(Math.random() * (high - low)) + low;}
 
+    setUpMe(index) {
+        this._sprite.y = this.randomize(250, 0);
+        this._sprite.x = this.randomize(0, 150);
+        
         this._stage.addChild(this._sprite);
         
     }

@@ -77,6 +77,7 @@ class Mover {
                     sprite.x = -width;
                     
                     //maybe switch backgrounds?
+                    //this._stage.regX = sprite.x;
                     sprite.dispatchEvent(this._eventStageExit);
                 }
 
