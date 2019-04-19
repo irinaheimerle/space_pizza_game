@@ -4,7 +4,7 @@ class Mover {
         // construct custom event object for object moving off stage
         this._eventStageExit = new createjs.Event("stageExit", true);
         // private property variables
-        this._speed = 2;
+        this._speed = 4;
         this._sprite = sprite;
         this._direction = Mover.LEFT;
         this._moving = false;
@@ -48,6 +48,10 @@ class Mover {
         this._moving = false;
     }
 
+    stageExit() {
+        console.log("OFF THE STAGE!");
+    }
+
     update() {
         if (this._moving) {
 
@@ -70,16 +74,26 @@ class Mover {
 
             } else if (this._direction == Mover.RIGHT) {
                 // moving right
-                //sprite.scaleX = -1;
+                // sprite.scaleX = -1;
                 //sprite.rotation = 0;
                 sprite.x = sprite.x + this._speed;
-                if (sprite.x > (this._stage.canvas.width + width)) {
+                
+                if (sprite.x > ((this._stage.canvas.width + width) / 2)) {
                     sprite.x = -width;
                     
                     //maybe switch backgrounds?
                     //this._stage.regX = sprite.x;
                     sprite.dispatchEvent(this._eventStageExit);
                 }
+
+                // if (sprite.x > 390) {
+                //     console.log("OFF THE STAGE!");
+                //     sprite.x = -width;
+                    
+                //     //maybe switch backgrounds?
+                //     //this._stage.regX = sprite.x;
+                //     sprite.dispatchEvent(this._eventStageExit);
+                // }
 
             } else if (this._direction == Mover.UP) {
                 // moving up

@@ -30,6 +30,8 @@
     let thirdLevel = false;
     let pizzaSlices = [];
 
+    let currentGameSlices;
+
     let levelOver = new createjs.Event("levelOver", true);
 
     //TO ADD BACK INTO THE GAME
@@ -39,12 +41,12 @@
     
     // event handlers
     function onReady(e) {
-        console.log("setting up game");
         e.remove();
 
         //opening screen set up / btnPlay set up
         openingScreen = new UserInterface(stage,assetManager, 'screen');
 
+        //set up the play button 
         btnPlay = assetManager.getSprite("spritesheet");
         btnPlay.gotoAndStop("playUp");
         btnPlay.x = -100;
@@ -65,23 +67,30 @@
         astronaut = new Astronaut(stage, assetManager);
         
         stage.on("pizzaCaught", onPizzaCaught);
+        stage.on("levelOver", onLevelOver);
         
-        // // startup the ticker
+        // startup the ticker
         createjs.Ticker.framerate = FRAME_RATE;
         createjs.Ticker.on("tick", onTick);
 
     }
 
     function startGame(e) {
+        //hide intial game screens / btnPlay
         openingScreen.hideMe();
         stage.removeChild(btnPlay);
+        //set the background for the game
         background = new UserInterface(stage, assetManager, "background");
         astronaut.setUpMe();
 
+        //set first level pizza slice numbers
         if(firstLevel) pizzaMax = 4;
+
+        currentGameSlices = pizzaMax - 2;
         
         for(let x=0; x<pizzaMax; x++) pizzaSlices.push(new Pizza(stage, assetManager, astronaut));
-        for(let slice of pizzaSlices) slice.setUpMe(pizzaSlices.indexOf(slice));
+
+        for(let x=0; x<pizzaMax - 2; x++) pizzaSlices[x].setUpMe();
         
         // remove click event on background
         e.remove();
@@ -96,10 +105,14 @@
         document.onkeydown = onKeyDown;
         document.onkeyup = onKeyUp;
 
+        stage.on("stageExit", stageExit);
+
     }
 
     function onPizzaCaught() {
         pizzaCaught++;
+
+        console.log("pizza caught!" + pizzaCaught, pizzaMax);
         
         if(sliceExists == false) {
             displaySlices.gotoAndStop(`slice${pizzaCaught}`);
@@ -111,14 +124,17 @@
             stage.addChild(displaySlices);
         }
 
-        // if(pizzaCaught == 2) {
-        //     stage.dispatchEvent("levelOver");
-        //     onLevelOver();
-        // }
+        if(pizzaCaught === pizzaMax) stage.dispatchEvent("levelOver");
+        
     }
 
     function onLevelOver() {
-        console.log("level over!!!" + pizzaCaught);
+        console.log("LEVEL OVER!");
+    }
+
+    function stageExit() {
+        //set up the other slices
+        for(let x=currentGameSlices; x<pizzaMax; x++) pizzaSlices[x].setUpMe();
     }
 
     function onKeyDown(e) {
@@ -157,7 +173,7 @@
     }
 
     function main() {
-        console.log("intitializing");
+        // console.log("intitializing");
 
         //get reference to canvas
         canvas = document.getElementById("myCanvas");

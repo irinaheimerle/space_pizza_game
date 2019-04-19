@@ -36,9 +36,11 @@ class Pizza {
 
     randomize(high, low) {return Math.round(Math.random() * (high - low)) + low;}
 
-    setUpMe(index) {
-        this._sprite.y = this.randomize(250, 0);
-        this._sprite.x = this.randomize(0, 150);
+    setUpMe() {
+        this._sprite.y = this.randomize(300, 0);
+        this._sprite.x = this.randomize(0, -300);
+
+        
         
         this._stage.addChild(this._sprite);
         

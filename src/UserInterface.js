@@ -5,20 +5,20 @@ class UserInterface {
         UserInterface.levelStart = false;
         
         //build sprite based on type
-        if(type == 'background')  {
+        if(type === 'background')  {
             this._sprite = assetManager.getSprite("spritesheet");
             this._sprite.gotoAndPlay("background");
             this._sprite.x = 0;
             this._sprite.y = 0;
             this._stage.addChild(this._sprite);
-        } else if(type == 'screen') {
+        } else if(type === 'screen') {
             this._sprite = assetManager.getSprite("spritesheet");
             this._sprite.gotoAndPlay("openingScreen");
             this._sprite.x = 0;
             this._sprite.y = 0;
             this._stage.addChild(this._sprite);
             
-        } else if(type == 'label') {
+        } else if(type === 'label') {
             //this._txtLevel = new createjs.BitmapText("0", assetManager.getSpriteSheet("spritesheet"));
             this._sprite = assetManager.getSprite("spritesheet");
             //TO-DO: swap this out depending on current level
