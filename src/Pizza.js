@@ -20,29 +20,38 @@ class Pizza {
 
         //add to the stage
         //this._stage.addChild(this._sprite);
+
+        this.counter = 0;
     }
 
     // Custom functions for class
     updateMe() {
-        let a = this._astronautSprite.x - this._sprite.x;
-        let b = this._astronautSprite.y - this._sprite.y;
-        let c = Math.sqrt((a * a) + (b * b));
+        let astronautBounds = this._astronautSprite.getBounds();
+        let sliceBounds = this._sprite.getBounds();
 
-        if(c >= 120) {
-            this._sprite.dispatchEvent(this._eventPizzaCaught);
-            this._burntPizza();
-        }
+        // let c = 
+        //     ( ( astronautBounds.y + astronautBounds.height ) < ( sliceBounds.y ) ) ||
+        //     ( astronautBounds.y > ( sliceBounds.y + sliceBounds.height ) ) ||
+        //     ( ( astronautBounds.x + astronautBounds.width ) < sliceBounds.x ) ||
+        //     ( astronautBounds.x > ( sliceBounds.x + sliceBounds.width ) )
+        // ;
+
+        // let c = ((astronautBounds.y + astronautBounds.height) > (sliceBounds.y));
+
+        // if(c) console.log("collision now!");
     }
 
-    randomize(high, low) {return Math.round(Math.random() * (high - low)) + low;}
+    randomize(low, high) {return Math.round(Math.random() * (high - low)) + low;}
 
     setUpMe() {
-        this._sprite.y = this.randomize(300, 0);
-        this._sprite.x = this.randomize(0, -300);
+        let restrictions = this._astronautSprite.getBounds();
 
-        
-        
+        this._sprite.x = this.randomize(175, 300);
+        console.log(this._sprite.x);
+        // this._sprite.y = this.randomize(restrictions.y + 100, 300);
+
         this._stage.addChild(this._sprite);
+
         
     }
 

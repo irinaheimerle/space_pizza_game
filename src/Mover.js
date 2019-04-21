@@ -86,15 +86,6 @@ class Mover {
                     sprite.dispatchEvent(this._eventStageExit);
                 }
 
-                // if (sprite.x > 390) {
-                //     console.log("OFF THE STAGE!");
-                //     sprite.x = -width;
-                    
-                //     //maybe switch backgrounds?
-                //     //this._stage.regX = sprite.x;
-                //     sprite.dispatchEvent(this._eventStageExit);
-                // }
-
             } else if (this._direction == Mover.UP) {
                 // moving up
                 //sprite.scaleX = 1;

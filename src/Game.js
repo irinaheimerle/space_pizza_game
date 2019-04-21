@@ -34,6 +34,8 @@
 
     let levelOver = new createjs.Event("levelOver", true);
 
+    let afterLoad = false;
+
     //TO ADD BACK INTO THE GAME
     // let openingScreen;
     // let btnPlay;
@@ -68,11 +70,10 @@
         
         stage.on("pizzaCaught", onPizzaCaught);
         stage.on("levelOver", onLevelOver);
-        
+
         // startup the ticker
         createjs.Ticker.framerate = FRAME_RATE;
         createjs.Ticker.on("tick", onTick);
-
     }
 
     function startGame(e) {
@@ -84,13 +85,13 @@
         astronaut.setUpMe();
 
         //set first level pizza slice numbers
-        if(firstLevel) pizzaMax = 4;
+        if(firstLevel) pizzaMax = 2;
 
         currentGameSlices = pizzaMax - 2;
         
         for(let x=0; x<pizzaMax; x++) pizzaSlices.push(new Pizza(stage, assetManager, astronaut));
 
-        for(let x=0; x<pizzaMax - 2; x++) pizzaSlices[x].setUpMe();
+        for(let x=0; x<pizzaMax; x++) pizzaSlices[x].setUpMe(pizzaSlices.indexOf(x));
         
         // remove click event on background
         e.remove();
@@ -107,13 +108,12 @@
 
         stage.on("stageExit", stageExit);
 
+        afterLoad = true;
     }
 
     function onPizzaCaught() {
         pizzaCaught++;
 
-        console.log("pizza caught!" + pizzaCaught, pizzaMax);
-        
         if(sliceExists == false) {
             displaySlices.gotoAndStop(`slice${pizzaCaught}`);
             stage.addChild(displaySlices);
@@ -164,9 +164,12 @@
         //else stop the astronaut
         else astronaut.stopMe();
         
-        astronaut.updateMe();
+        if(afterLoad) {
+            astronaut.updateMe();
+            for(let slice of pizzaSlices) slice.updateMe();
+        }
 
-        for(let slice of pizzaSlices) slice.updateMe();
+        
 
         //and always update the stage
         stage.update();
