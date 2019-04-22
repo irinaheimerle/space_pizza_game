@@ -3,6 +3,7 @@ class Mover {
     constructor(sprite, stage) {
         // construct custom event object for object moving off stage
         this._eventStageExit = new createjs.Event("stageExit", true);
+        this._eventStageExitLeft = new createjs.Event("stageExitLeft", true);
         // private property variables
         this._speed = 4;
         this._sprite = sprite;
@@ -11,7 +12,7 @@ class Mover {
         this._stage = stage;
 
         this._heightConstraintLow = 100;
-        this._heightConstraintHigh = 300;
+        this._heightConstraintHigh = 400;
         this._widthConstraint = 0;
 
         // sprite not animating on construction
@@ -48,9 +49,7 @@ class Mover {
         this._moving = false;
     }
 
-    stageExit() {
-        console.log("OFF THE STAGE!");
-    }
+    
 
     update() {
         if (this._moving) {
@@ -68,8 +67,8 @@ class Mover {
                 //sprite.rotation = 0;
                 sprite.x = sprite.x - this._speed;
                 if (sprite.x < -width) {
-                    sprite.x = this._stage.canvas.width;
-                    sprite.dispatchEvent(this._eventStageExit);
+                    // sprite.x = this._stage.canvas.width;
+                    sprite.dispatchEvent(this._eventStageExitLeft);
                 }
 
             } else if (this._direction == Mover.RIGHT) {

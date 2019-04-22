@@ -1,5 +1,5 @@
 class UserInterface {
-    constructor(stage, assetManager, type) {
+    constructor(stage, assetManager, type, subtype) {
         //this local stage will point to the passed in stage
         this._stage = stage;
         UserInterface.levelStart = false;
@@ -13,7 +13,10 @@ class UserInterface {
             this._stage.addChild(this._sprite);
         } else if(type === 'screen') {
             this._sprite = assetManager.getSprite("spritesheet");
-            this._sprite.gotoAndPlay("openingScreen");
+
+            if(subtype === 'levelComplete') this._sprite.gotoAndPlay("levelComplete");
+            else this._sprite.gotoAndPlay("openingScreen");
+
             this._sprite.x = 0;
             this._sprite.y = 0;
             this._stage.addChild(this._sprite);

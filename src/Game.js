@@ -17,30 +17,22 @@
     let assetManager;
     let astronaut;
     let pizzaCaught = 0;
-    let background;
     let btnPlay;
-    let level1;
     let openingScreen;
+    let background;
+    let levelComplete;
     let displaySlices;
     let sliceExists = false;
+    let asteroid;
 
     let pizzaMax = 0;
     let firstLevel = false;
     let secondLevel = false;
     let thirdLevel = false;
     let pizzaSlices = [];
-
     let currentGameSlices;
-
-    let levelOver = new createjs.Event("levelOver", true);
-
     let afterLoad = false;
 
-    //TO ADD BACK INTO THE GAME
-    // let openingScreen;
-    // let btnPlay;
-    // let asteroid;
-    
     // event handlers
     function onReady(e) {
         e.remove();
@@ -59,15 +51,17 @@
         btnPlay.active = false;
         stage.addChild(btnPlay);
 
+        //animation for when a pizza is caught
         displaySlices = assetManager.getSprite("spritesheet");
-        displaySlices.x = 250;
-        displaySlices.y = -150;
+        displaySlices.x = 400;
+        displaySlices.y = -300;
 
         btnPlay.on("click", startGame, firstLevel = true);
 
         //create astronaut object
         astronaut = new Astronaut(stage, assetManager);
-        
+        asteroid = new Asteroid(stage, assetManager, astronaut);
+
         stage.on("pizzaCaught", onPizzaCaught);
         stage.on("levelOver", onLevelOver);
 
@@ -76,26 +70,35 @@
         createjs.Ticker.on("tick", onTick);
     }
 
-    function startGame(e) {
+    function startGame() {
         //hide intial game screens / btnPlay
         openingScreen.hideMe();
+        if(levelComplete) levelComplete.hideMe();
         stage.removeChild(btnPlay);
+
         //set the background for the game
         background = new UserInterface(stage, assetManager, "background");
         astronaut.setUpMe();
 
-        //set first level pizza slice numbers
-        if(firstLevel) pizzaMax = 6;
+        if(secondLevel || thirdLevel) astronaut.resetMe();
 
-        currentGameSlices = pizzaMax - 3;
+        //set first level pizza slice numbers
+        if(firstLevel) {
+            pizzaMax = 4;
+            currentGameSlices = pizzaMax - 2;
+        } 
+        else if(secondLevel) {
+            pizzaMax = 6;
+            currentGameSlices = pizzaMax - 3;
+        } else if(thirdLevel) {
+            pizzaMax = 8;
+            currentGameSlices = pizzaMax - 4;
+        }
 
         for(let x=0; x<currentGameSlices; x++) pizzaSlices.push(new Pizza(stage, assetManager, astronaut));
 
         //call this for slice set up (x and y values)
         prepareSlices();
-
-        // remove click event on background
-        e.remove();
 
         // current state of keys
         leftKey = false;
@@ -109,6 +112,7 @@
 
         //add more slices to the round
         stage.on("stageExit", prepareSlices);
+        stage.on("stageExitLeft", astronaut.stopMe);
 
         afterLoad = true;
     }
@@ -158,7 +162,34 @@
     }
 
     function onLevelOver() {
-        console.log("LEVEL OVER!");
+        setTimeout(() => {
+            astronaut.stopMe();
+            // background.hideMe();
+            if(firstLevel || secondLevel) levelComplete = new UserInterface(stage,assetManager, 'screen', 'levelComplete');
+            // else levelComplete = new UserInterface(stage,assetManager, 'screen', 'levelComplete');
+            else console.log("GAME OVER!");
+            
+            btnPlay = assetManager.getSprite("spritesheet");
+            btnPlay.gotoAndStop("playUp");
+            btnPlay.x = 25;
+            btnPlay.y = 250;
+            let hitAreaSprite = assetManager.getSprite("spritesheet");
+            btnPlay.buttonHelper = new createjs.ButtonHelper(btnPlay, "nextLevel", "nextLevelOver", 
+            "nextLevelOver", false, hitAreaSprite, "nextLevelOver");
+            btnPlay.active = false;
+            stage.addChild(btnPlay);
+
+            if(firstLevel) btnPlay.on("click", resetGame, firstLevel = false, secondLevel = true);
+            else if(secondLevel) btnPlay.on("click", resetGame, firstLevel = false, secondLevel = false, thirdLevel = true);
+        }, 1550);
+    }
+
+    function resetGame() {
+        pizzaMax = 0;
+        pizzaSlices = [];
+        pizzaCaught = 0;
+        stage.removeChild(displaySlices);
+        startGame();
     }
 
     function onKeyDown(e) {

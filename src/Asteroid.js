@@ -11,5 +11,7 @@ class Asteroid {
         this._sprite.y = 100;
 
         this._stage.addChild(this._sprite);
+
+        this._sprite.mover = new Mover(this._sprite, this._stage);
     }
 }

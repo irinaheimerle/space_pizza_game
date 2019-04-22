@@ -38,7 +38,7 @@ class Pizza {
     setUpMe() {
         //position slice
         this._sprite.x = this.randomize(25, 250);
-        this._sprite.y = this.randomize(0, 200);
+        this._sprite.y = this.randomize(100, 200);
 
         return this._sprite;
     }

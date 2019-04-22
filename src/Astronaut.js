@@ -7,7 +7,7 @@ class Astronaut {
         this._sprite.gotoAndPlay("generalAnimation");
 
         this._sprite.x = 0;
-        this._sprite.y = 100;
+        this._sprite.y = 50;
 
         this._sprite.mover = new Mover(this._sprite, this._stage);
         //stage.addChild(this._sprite);
@@ -39,8 +39,8 @@ class Astronaut {
     get sprite() {return this._sprite;}
     
 
-    // resetMe() {
-        
-        
-    // }
+    resetMe() {
+        this._sprite.x = 0;
+        this._sprite.y = 50;
+    }
 }
