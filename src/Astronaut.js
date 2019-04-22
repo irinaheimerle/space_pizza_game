@@ -9,13 +9,6 @@ class Astronaut {
         this._sprite.x = 0;
         this._sprite.y = 100;
 
-        //to-do figure this out so he's not so flippy floppy
-        //this._sprite.regX = this._sprite.getBounds().width/2;
-        //this._sprite.regY = this._sprite.getBounds().height/2 + 15;
-        
-
-        //console.log(this._sprite.getBounds());
-        
         this._sprite.mover = new Mover(this._sprite, this._stage);
         //stage.addChild(this._sprite);
     }

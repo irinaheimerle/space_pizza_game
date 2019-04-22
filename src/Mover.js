@@ -11,7 +11,7 @@ class Mover {
         this._stage = stage;
 
         this._heightConstraintLow = 100;
-        this._heightConstraintHigh = 250;
+        this._heightConstraintHigh = 300;
         this._widthConstraint = 0;
 
         // sprite not animating on construction

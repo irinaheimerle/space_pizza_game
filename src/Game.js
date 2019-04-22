@@ -39,7 +39,7 @@
     //TO ADD BACK INTO THE GAME
     // let openingScreen;
     // let btnPlay;
-    //let asteroid;
+    // let asteroid;
     
     // event handlers
     function onReady(e) {
@@ -85,14 +85,15 @@
         astronaut.setUpMe();
 
         //set first level pizza slice numbers
-        if(firstLevel) pizzaMax = 2;
+        if(firstLevel) pizzaMax = 6;
 
-        currentGameSlices = pizzaMax - 2;
-        
-        for(let x=0; x<pizzaMax; x++) pizzaSlices.push(new Pizza(stage, assetManager, astronaut));
+        currentGameSlices = pizzaMax - 3;
 
-        for(let x=0; x<pizzaMax; x++) pizzaSlices[x].setUpMe(pizzaSlices.indexOf(x));
-        
+        for(let x=0; x<currentGameSlices; x++) pizzaSlices.push(new Pizza(stage, assetManager, astronaut));
+
+        //call this for slice set up (x and y values)
+        prepareSlices();
+
         // remove click event on background
         e.remove();
 
@@ -106,9 +107,37 @@
         document.onkeydown = onKeyDown;
         document.onkeyup = onKeyUp;
 
-        stage.on("stageExit", stageExit);
+        //add more slices to the round
+        stage.on("stageExit", prepareSlices);
 
         afterLoad = true;
+    }
+
+    function prepareSlices() {
+        let currentSlice;
+        let previousSlice;
+
+        pizzaSlices.forEach(function (slice, index) {
+            currentSlice = slice.setUpMe();
+            previousSlice = index - 1;
+
+            if(index > 0) {
+                // console.log("current" + currentSlice.x);
+                // console.log("previous " + pizzaSlices[previousSlice].x);
+
+                //Add more to the x value if they're too close together
+                if(currentSlice.x <= pizzaSlices[previousSlice].x) if(pizzaSlices[previousSlice].x - currentSlice.x <= 75) currentSlice.x += 75;
+                else if (currentSlice.x >= pizzaSlices[previousSlice].x) if(currentSlice.x - pizzaSlices[previousSlice].x <= 75) pizzaSlices[previousSlice].x += 75;
+                
+            }
+
+            stage.addChild(currentSlice);
+
+            //only add so many depending on level
+            if(index <= currentGameSlices) {
+                stage.addChild(currentSlice);
+            }
+        });
     }
 
     function onPizzaCaught() {
@@ -130,11 +159,6 @@
 
     function onLevelOver() {
         console.log("LEVEL OVER!");
-    }
-
-    function stageExit() {
-        //set up the other slices
-        for(let x=currentGameSlices; x<pizzaMax; x++) pizzaSlices[x].setUpMe();
     }
 
     function onKeyDown(e) {
@@ -168,8 +192,6 @@
             astronaut.updateMe();
             for(let slice of pizzaSlices) slice.updateMe();
         }
-
-        
 
         //and always update the stage
         stage.update();

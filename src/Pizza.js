@@ -14,52 +14,36 @@ class Pizza {
         this._sprite = assetManager.getSprite("spritesheet");
         //locate main animation / sprite
         this._sprite.gotoAndStop("pizza");
-
-        //this pizza will eventually move
-        //this._sprite.mover = new Mover(this._sprite, stage);
-
-        //add to the stage
-        //this._stage.addChild(this._sprite);
-
-        this.counter = 0;
     }
 
     // Custom functions for class
     updateMe() {
-        let astronautBounds = this._astronautSprite.getBounds();
-        let sliceBounds = this._sprite.getBounds();
+        //collision detection
+        
+        let a = this._astronautSprite.x - this._sprite.x;
+        let b = this._astronautSprite.y - this._sprite.y;
+        let c = Math.sqrt((Math.pow(a,2)) + (Math.pow(b, 2)));
+        
+        let result = c <= a + b;
 
-        // let c = 
-        //     ( ( astronautBounds.y + astronautBounds.height ) < ( sliceBounds.y ) ) ||
-        //     ( astronautBounds.y > ( sliceBounds.y + sliceBounds.height ) ) ||
-        //     ( ( astronautBounds.x + astronautBounds.width ) < sliceBounds.x ) ||
-        //     ( astronautBounds.x > ( sliceBounds.x + sliceBounds.width ) )
-        // ;
-
-        // let c = ((astronautBounds.y + astronautBounds.height) > (sliceBounds.y));
-
-        // if(c) console.log("collision now!");
+        if(result) {
+            this._sprite.dispatchEvent(this._eventPizzaCaught);
+            this._burntPizza();
+        }
     }
 
+    //randomize number
     randomize(low, high) {return Math.round(Math.random() * (high - low)) + low;}
 
     setUpMe() {
-        let restrictions = this._astronautSprite.getBounds();
+        //position slice
+        this._sprite.x = this.randomize(25, 250);
+        this._sprite.y = this.randomize(0, 200);
 
-        this._sprite.x = this.randomize(175, 300);
-        console.log(this._sprite.x);
-        // this._sprite.y = this.randomize(restrictions.y + 100, 300);
-
-        this._stage.addChild(this._sprite);
-
-        
+        return this._sprite;
     }
 
-    //"private" functions
-    _pizzaCaught() {
-        //update level
-    }
-
+    //private functions
     _burntPizza() {
         //recycle pizza, put back in loop for next level
         this._stage.removeChild(this._sprite);
