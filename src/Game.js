@@ -85,13 +85,13 @@
         //set the background for the game
         background = new UserInterface(stage, assetManager, "background");
 
+        gameTimer = window.setInterval(onAddAsteroid, 500);
+
         //set up the astronaut
         astronaut.setUpMe();
 
         //sets the astronaut back to the original x and y values
         if(secondLevel || thirdLevel) astronaut.resetMe();
-
-        gameTimer = window.setInterval(onAddAsteroid, 500); 
 
         //set game specs depending on level
         if(firstLevel) {
@@ -180,6 +180,7 @@
     }
 
     function onLevelOver() {
+        window.clearInterval();
         //set a timeout so the screen popping up isn't so jarring
         setTimeout(() => {
             // background.hideMe();

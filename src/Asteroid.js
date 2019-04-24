@@ -44,7 +44,7 @@ class Asteroid {
 
         this._sprite.rotation = this._randomMe(135, 225);
 
-        // this._sprite.on("stageExitDiagonal", this._burntAsteroid, this);
+        this._sprite.on("stageExitDiagonal", this._burntAsteroid, this);
     }
 
     fireMe() {
