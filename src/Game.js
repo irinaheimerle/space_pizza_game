@@ -18,12 +18,13 @@
     let astronaut;
     let pizzaCaught = 0;
     let btnPlay;
+    let btnNext;
     let openingScreen;
     let background;
+    let gameOver;
     let levelComplete;
     let displaySlices;
     let sliceExists = false;
-
     let gameTimer;
     
     let pizzaMax = 0;
@@ -75,12 +76,15 @@
         createjs.Ticker.on("tick", onTick);
     }
 
+    //game functions
     function startGame() {
         //hide intial game screens / btnPlay
         openingScreen.hideMe();
         //hide level complete screen if it exists
         if(levelComplete) levelComplete.hideMe();
-        stage.removeChild(btnPlay);
+
+        if(btnPlay) stage.removeChild(btnPlay);
+        if(btnNext) stage.removeChild(btnNext);
 
         //set the background for the game
         background = new UserInterface(stage, assetManager, "background");
@@ -132,6 +136,96 @@
         afterLoad = true;
     }
 
+    function onLevelOver() {
+        astronaut.stopMe();
+        window.clearInterval(gameTimer);
+        for(let asteroid of asteroids) if(asteroid.active) stage.removeChild(asteroid);
+        //set a timeout so the screen popping up isn't so jarring
+        setTimeout(() => {
+            if(firstLevel) levelComplete = new UserInterface(stage, assetManager, 'screen', 'levelComplete');
+            else if(secondLevel) onGameOver();
+
+            //next level button
+            if(firstLevel) {
+                btnNext = assetManager.getSprite("spritesheet");
+                btnNext.gotoAndStop("playUp");
+                btnNext.x = 25;
+                btnNext.y = 250;
+                let hitAreaSprite = assetManager.getSprite("spritesheet");
+                btnNext.buttonHelper = new createjs.ButtonHelper(btnNext, "nextLevel", "nextLevelOver", 
+                "nextLevelOver", false, hitAreaSprite, "nextLevelOver");
+                btnNext.active = false;
+                stage.addChild(btnNext);
+
+                btnNext.on("click", resetGame, firstLevel = false, secondLevel = true);
+            }
+            
+        }, 1500);
+    }
+
+    //when the astronaut is hit
+    function onLoseLives() {
+        astronaut.lives -= 1;
+        astronaut.alpha = .4;
+        if(astronaut.lives <= 0) stage.dispatchEvent("outOfLives");
+    }
+
+    //when the game is over
+    function onGameOver() {
+        astronaut.stopMe();
+        gameOver = new UserInterface(stage,assetManager, 'screen', 'gameOver');
+        btnPlay.x = 10;
+        btnPlay.y = 100;
+        stage.addChild(btnPlay);
+
+        btnPlay.on("click", resetGame, firstLevel = true, secondLevel = false);
+    }
+
+    //to reset the game
+    function resetGame() {
+        if(gameOver) stage.removeChild(gameOver, background);
+        pizzaMax = 0;
+        pizzaSlices = [];
+        pizzaCaught = 0;
+        stage.removeChild(displaySlices);
+        startGame();
+    }
+
+    //keyboard event listeners
+    function onKeyDown(e) {
+        // // which keystroke is down?
+        if (e.keyCode == 37) leftKey = true;
+        else if (e.keyCode == 39) rightKey = true;
+        else if (e.keyCode == 38) upKey = true;
+        else if (e.keyCode == 40) downKey = true;
+    }
+
+    function onKeyUp(e) {
+        // // which keystroke is up?
+        if (e.keyCode == 37) leftKey = false;
+        else if (e.keyCode == 39) rightKey = false;
+        else if (e.keyCode == 38) upKey = false;
+        else if (e.keyCode == 40) downKey = false;
+    }
+
+    //game object functions
+    function onPizzaCaught() {
+        pizzaCaught++;
+
+        if(sliceExists == false) {
+            displaySlices.gotoAndStop(`slice${pizzaCaught}`);
+            stage.addChild(displaySlices);
+            sliceExists = true;
+        } else {
+            stage.removeChild(displaySlices);
+            displaySlices.gotoAndStop(`slice${pizzaCaught}`);
+            stage.addChild(displaySlices);
+        }
+
+        if(pizzaCaught === pizzaMax) stage.dispatchEvent("levelOver");
+        
+    }
+
     function prepareSlices() {
         pizzaSlices.forEach((slice) => {
             currentSlice = slice.setUpMe();
@@ -152,88 +246,6 @@
         });
     }
 
-    function onPizzaCaught() {
-        pizzaCaught++;
-
-        if(sliceExists == false) {
-            displaySlices.gotoAndStop(`slice${pizzaCaught}`);
-            stage.addChild(displaySlices);
-            sliceExists = true;
-        } else {
-            stage.removeChild(displaySlices);
-            displaySlices.gotoAndStop(`slice${pizzaCaught}`);
-            stage.addChild(displaySlices);
-        }
-
-        if(pizzaCaught === pizzaMax) stage.dispatchEvent("levelOver");
-        
-    }
-
-    function onLoseLives() {
-        astronaut.lives -= 1;
-        if(astronaut.lives <= 0) stage.dispatchEvent("outOfLives");
-    }
-
-    function onGameOver() {
-        astronaut.stopMe();
-        let gameOver = new UserInterface(stage,assetManager, 'screen', 'gameOver');
-        btnPlay.x = 25;
-        btnPlay.y = 100;
-        stage.addChild(btnPlay);
-    }
-
-    function resetGame() {
-        pizzaMax = 0;
-        pizzaSlices = [];
-        pizzaCaught = 0;
-        stage.removeChild(displaySlices);
-        startGame();
-    }
-
-    function onLevelOver() {
-        astronaut.stopMe();
-        window.clearInterval(gameTimer);
-
-        for(let asteroid of asteroids) if(asteroid.active) stage.removeChild(asteroid);
-        //set a timeout so the screen popping up isn't so jarring
-        setTimeout(() => {
-            // background.hideMe();
-            if(firstLevel) levelComplete = new UserInterface(stage, assetManager, 'screen', 'levelComplete');
-            else if(secondLevel) onGameOver();
-
-            if(firstLevel) {
-                btnPlay = assetManager.getSprite("spritesheet");
-                btnPlay.gotoAndStop("playUp");
-                btnPlay.x = 25;
-                btnPlay.y = 250;
-                let hitAreaSprite = assetManager.getSprite("spritesheet");
-                btnPlay.buttonHelper = new createjs.ButtonHelper(btnPlay, "nextLevel", "nextLevelOver", 
-                "nextLevelOver", false, hitAreaSprite, "nextLevelOver");
-                btnPlay.active = false;
-                stage.addChild(btnPlay);
-
-                btnPlay.on("click", resetGame, firstLevel = false, secondLevel = true);
-            }
-            
-        }, 1500);
-    }
-
-    function onKeyDown(e) {
-        // // which keystroke is down?
-        if (e.keyCode == 37) leftKey = true;
-        else if (e.keyCode == 39) rightKey = true;
-        else if (e.keyCode == 38) upKey = true;
-        else if (e.keyCode == 40) downKey = true;
-    }
-
-    function onKeyUp(e) {
-        // // which keystroke is up?
-        if (e.keyCode == 37) leftKey = false;
-        else if (e.keyCode == 39) rightKey = false;
-        else if (e.keyCode == 38) upKey = false;
-        else if (e.keyCode == 40) downKey = false;
-    }
-
     function onTick() {
         document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
 
@@ -245,6 +257,7 @@
         //else stop the astronaut
         else astronaut.stopMe();
 
+        //update game objects
         astronaut.updateMe();
         for(let slice of pizzaSlices) slice.updateMe();
         for(let asteroid of asteroids) if(asteroid.active) asteroid.updateMe();

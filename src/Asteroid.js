@@ -72,8 +72,7 @@ class Asteroid {
             let c = Math.sqrt((a * a) + (b * b));
 
             if (c <= 25) {
-                //put sound here
-                createjs.Sound.play("explosion");
+                // createjs.Sound.play("explosion");
                 this._sprite.dispatchEvent(this._hitAstronaut);
                 this._burntAsteroid();
             }
