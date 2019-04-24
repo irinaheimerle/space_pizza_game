@@ -64,19 +64,19 @@ class Asteroid {
         bounds.x = this._stage.canvas.width;
         bounds.y = this._stage.canvas.width;
 
-        let a = this._astronautSprite.x - this._sprite.x;
-        let b = this._astronautSprite.y - this._sprite.y;
+        if(this._sprite.x < bounds.x && this._sprite.y < bounds.y) {
+            let a = this._sprite.x - this._astronautSprite.x;
+            let b = this._sprite.y - this._astronautSprite.y;
 
-        let c = Math.sqrt((a * a) + (b * b));
+            // Get distance with Pythagoras
+            let c = Math.sqrt((a * a) + (b * b));
 
-        if(c <= 16) console.log(true);
-
-        // if(this._sprite.x < bounds.x && this._sprite.y < bounds.y) {
-        //     if(c <= 150 && c < 152 && c !== 50) console.log(true);
-        // }
-
-        // if(this._result) this._sprite.dispatchEvent(this._hitAstronaut);
-        // else this._astronautSprite.alpha = 1;
+            if (c <= 20) {
+                //put sound here
+                this._sprite.dispatchEvent(this._hitAstronaut);
+                this._burntAsteroid();
+            }
+        }
 
         this._sprite.mover.update();
     }

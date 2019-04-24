@@ -15,6 +15,7 @@ class UserInterface {
             this._sprite = assetManager.getSprite("spritesheet");
 
             if(subtype === 'levelComplete') this._sprite.gotoAndPlay("levelComplete");
+            if(subtype === 'gameOver') this._sprite.gotoAndPlay("gameOver");
             else this._sprite.gotoAndPlay("openingScreen");
 
             this._sprite.x = 0;

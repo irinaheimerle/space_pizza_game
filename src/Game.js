@@ -68,7 +68,7 @@
         stage.on("pizzaCaught", onPizzaCaught);
         stage.on("levelOver", onLevelOver);
         stage.on("astronautHit", onLoseLives);
-        stage.on("outOfLives", onGameLose);
+        stage.on("outOfLives", onGameOver);
 
         // startup the ticker
         createjs.Ticker.framerate = FRAME_RATE;
@@ -84,9 +84,7 @@
 
         //set the background for the game
         background = new UserInterface(stage, assetManager, "background");
-
-        gameTimer = window.setInterval(onAddAsteroid, 500);
-
+        
         //set up the astronaut
         astronaut.setUpMe();
 
@@ -97,15 +95,16 @@
         if(firstLevel) {
             pizzaMax = 4;
             currentGameSlices = pizzaMax - 2;
+            gameTimer = window.setInterval(onAddAsteroid, 500);
         } 
         else if(secondLevel) {
             pizzaMax = 6;
             currentGameSlices = pizzaMax - 3;
-            // window.setInterval(onAddAsteroid, 300);    
+            window.setInterval(onAddAsteroid, 300);   
         } else if(thirdLevel) {
             pizzaMax = 8;
             currentGameSlices = pizzaMax - 4;
-            // window.setInterval(onAddAsteroid, 500);
+            window.setInterval(onAddAsteroid, 500);
         }
 
         //make pizza slices based on the current game slice (we'll show the rest on the second part of the level)
@@ -175,18 +174,17 @@
         if(astronaut.lives <= 0) stage.dispatchEvent("outOfLives");
     }
 
-    function onGameLose() {
-        console.log("GAME OVER!");
+    function onGameOver() {
+        let gameOver = new UserInterface(stage,assetManager, 'screen', 'gameOver');
     }
 
     function onLevelOver() {
-        window.clearInterval();
+        window.clearInterval(gameTimer);
         //set a timeout so the screen popping up isn't so jarring
         setTimeout(() => {
             // background.hideMe();
             if(firstLevel || secondLevel) levelComplete = new UserInterface(stage,assetManager, 'screen', 'levelComplete');
-            // else levelComplete = new UserInterface(stage,assetManager, 'screen', 'levelComplete');
-            else console.log("GAME OVER!");
+            else onGameOver();
             
             btnPlay = assetManager.getSprite("spritesheet");
             btnPlay.gotoAndStop("playUp");
