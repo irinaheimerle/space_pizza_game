@@ -19,13 +19,12 @@ class Pizza {
     // Custom functions for class
     updateMe() {
         //collision detection
-        
         let a = this._astronautSprite.x - this._sprite.x;
         let b = this._astronautSprite.y - this._sprite.y;
         let c = Math.sqrt((Math.pow(a,2)) + (Math.pow(b, 2)));
         
         let result = c <= a + b;
-
+        
         if(result) {
             this._sprite.dispatchEvent(this._eventPizzaCaught);
             this._burntPizza();
@@ -37,7 +36,7 @@ class Pizza {
 
     setUpMe() {
         //position slice
-        this._sprite.x = this.randomize(25, 250);
+        this._sprite.x = this.randomize(50, 250);
         this._sprite.y = this.randomize(100, 200);
 
         return this._sprite;

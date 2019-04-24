@@ -4,13 +4,15 @@ class Mover {
         // construct custom event object for object moving off stage
         this._eventStageExit = new createjs.Event("stageExit", true);
         this._eventStageExitLeft = new createjs.Event("stageExitLeft", true);
+        this._propStageExit = new createjs.Event("propStageExit", true);
+
         // private property variables
         this._speed = 4;
         this._sprite = sprite;
         this._direction = Mover.LEFT;
         this._moving = false;
         this._stage = stage;
-
+        
         this._heightConstraintLow = 100;
         this._heightConstraintHigh = 400;
         this._widthConstraint = 0;
@@ -60,7 +62,7 @@ class Mover {
             // get current width of sprite on this frame
             // we only need to concern ourselves with width in terms of off stage since we rotate sprite up, down, left, and right
             let width = sprite.getBounds().width;
-            
+
             if (this._direction == Mover.LEFT) {
                 // moving left
                 //sprite.scaleX = 1;

@@ -23,16 +23,17 @@
     let levelComplete;
     let displaySlices;
     let sliceExists = false;
-    let asteroid;
 
+    let gameTimer;
+    
     let pizzaMax = 0;
     let firstLevel = false;
     let secondLevel = false;
     let thirdLevel = false;
     let pizzaSlices = [];
+    let asteroids = [];
     let currentGameSlices;
-    let afterLoad = false;
-
+    
     // event handlers
     function onReady(e) {
         e.remove();
@@ -56,14 +57,18 @@
         displaySlices.x = 400;
         displaySlices.y = -300;
 
-        btnPlay.on("click", startGame, firstLevel = true);
-
         //create astronaut object
         astronaut = new Astronaut(stage, assetManager);
-        asteroid = new Asteroid(stage, assetManager, astronaut);
 
+        //create asteroid objects to use during the entire game
+        for (let i=0; i<10; i++) asteroids.push(new Asteroid(stage, assetManager, astronaut));
+
+        btnPlay.on("click", startGame, firstLevel = true);
+        
         stage.on("pizzaCaught", onPizzaCaught);
         stage.on("levelOver", onLevelOver);
+        stage.on("astronautHit", onLoseLives);
+        stage.on("outOfLives", onGameLose);
 
         // startup the ticker
         createjs.Ticker.framerate = FRAME_RATE;
@@ -73,16 +78,22 @@
     function startGame() {
         //hide intial game screens / btnPlay
         openingScreen.hideMe();
+        //hide level complete screen if it exists
         if(levelComplete) levelComplete.hideMe();
         stage.removeChild(btnPlay);
 
         //set the background for the game
         background = new UserInterface(stage, assetManager, "background");
+
+        //set up the astronaut
         astronaut.setUpMe();
 
+        //sets the astronaut back to the original x and y values
         if(secondLevel || thirdLevel) astronaut.resetMe();
 
-        //set first level pizza slice numbers
+        gameTimer = window.setInterval(onAddAsteroid, 500); 
+
+        //set game specs depending on level
         if(firstLevel) {
             pizzaMax = 4;
             currentGameSlices = pizzaMax - 2;
@@ -90,11 +101,14 @@
         else if(secondLevel) {
             pizzaMax = 6;
             currentGameSlices = pizzaMax - 3;
+            // window.setInterval(onAddAsteroid, 300);    
         } else if(thirdLevel) {
             pizzaMax = 8;
             currentGameSlices = pizzaMax - 4;
+            // window.setInterval(onAddAsteroid, 500);
         }
 
+        //make pizza slices based on the current game slice (we'll show the rest on the second part of the level)
         for(let x=0; x<currentGameSlices; x++) pizzaSlices.push(new Pizza(stage, assetManager, astronaut));
 
         //call this for slice set up (x and y values)
@@ -114,32 +128,26 @@
         stage.on("stageExit", prepareSlices);
         stage.on("stageExitLeft", astronaut.stopMe);
 
+        //prevent collision detection until after game is completely loaded
         afterLoad = true;
     }
 
     function prepareSlices() {
-        let currentSlice;
-        let previousSlice;
-
-        pizzaSlices.forEach(function (slice, index) {
+        pizzaSlices.forEach((slice) => {
             currentSlice = slice.setUpMe();
-            previousSlice = index - 1;
-
-            if(index > 0) {
-                // console.log("current" + currentSlice.x);
-                // console.log("previous " + pizzaSlices[previousSlice].x);
-
-                //Add more to the x value if they're too close together
-                if(currentSlice.x <= pizzaSlices[previousSlice].x) if(pizzaSlices[previousSlice].x - currentSlice.x <= 75) currentSlice.x += 75;
-                else if (currentSlice.x >= pizzaSlices[previousSlice].x) if(currentSlice.x - pizzaSlices[previousSlice].x <= 75) pizzaSlices[previousSlice].x += 75;
-                
-            }
-
             stage.addChild(currentSlice);
+        });
+    }
 
-            //only add so many depending on level
-            if(index <= currentGameSlices) {
-                stage.addChild(currentSlice);
+    function onAddAsteroid() {
+        asteroids.forEach((asteroid) => {
+            if(asteroid.active === false) {
+                asteroid.active = true;
+                asteroid.setUpMe();
+                if(firstLevel) asteroid.setSpeed(4);
+                else if(secondLevel) asteroid.setSpeed(6);
+                else if(thirdLevel) asteroid.setSpeed(8);
+                asteroid.fireMe();
             }
         });
     }
@@ -161,9 +169,19 @@
         
     }
 
+    function onLoseLives() {
+        astronaut.lives -= 1;
+
+        if(astronaut.lives <= 0) stage.dispatchEvent("outOfLives");
+    }
+
+    function onGameLose() {
+        console.log("GAME OVER!");
+    }
+
     function onLevelOver() {
+        //set a timeout so the screen popping up isn't so jarring
         setTimeout(() => {
-            astronaut.stopMe();
             // background.hideMe();
             if(firstLevel || secondLevel) levelComplete = new UserInterface(stage,assetManager, 'screen', 'levelComplete');
             // else levelComplete = new UserInterface(stage,assetManager, 'screen', 'levelComplete');
@@ -181,7 +199,7 @@
 
             if(firstLevel) btnPlay.on("click", resetGame, firstLevel = false, secondLevel = true);
             else if(secondLevel) btnPlay.on("click", resetGame, firstLevel = false, secondLevel = false, thirdLevel = true);
-        }, 1550);
+        }, 1500);
     }
 
     function resetGame() {
@@ -218,11 +236,10 @@
         else if (downKey) astronaut.startMe(Mover.DOWN);
         //else stop the astronaut
         else astronaut.stopMe();
-        
-        if(afterLoad) {
-            astronaut.updateMe();
-            for(let slice of pizzaSlices) slice.updateMe();
-        }
+
+        astronaut.updateMe();
+        for(let slice of pizzaSlices) slice.updateMe();
+        for(let asteroid of asteroids) if(asteroid.active) asteroid.updateMe();
 
         //and always update the stage
         stage.update();
