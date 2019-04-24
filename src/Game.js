@@ -177,6 +177,8 @@
     function onGameOver() {
         astronaut.stopMe();
         let gameOver = new UserInterface(stage,assetManager, 'screen', 'gameOver');
+        btnPlay.x = 25;
+        btnPlay.y = 100;
         stage.addChild(btnPlay);
     }
 
@@ -191,24 +193,28 @@
     function onLevelOver() {
         astronaut.stopMe();
         window.clearInterval(gameTimer);
+
+        for(let asteroid of asteroids) if(asteroid.active) stage.removeChild(asteroid);
         //set a timeout so the screen popping up isn't so jarring
         setTimeout(() => {
             // background.hideMe();
             if(firstLevel) levelComplete = new UserInterface(stage, assetManager, 'screen', 'levelComplete');
             else if(secondLevel) onGameOver();
 
-            btnPlay = assetManager.getSprite("spritesheet");
-            btnPlay.gotoAndStop("playUp");
-            btnPlay.x = 25;
-            btnPlay.y = 250;
-            let hitAreaSprite = assetManager.getSprite("spritesheet");
-            btnPlay.buttonHelper = new createjs.ButtonHelper(btnPlay, "nextLevel", "nextLevelOver", 
-            "nextLevelOver", false, hitAreaSprite, "nextLevelOver");
-            btnPlay.active = false;
-            stage.addChild(btnPlay);
+            if(firstLevel) {
+                btnPlay = assetManager.getSprite("spritesheet");
+                btnPlay.gotoAndStop("playUp");
+                btnPlay.x = 25;
+                btnPlay.y = 250;
+                let hitAreaSprite = assetManager.getSprite("spritesheet");
+                btnPlay.buttonHelper = new createjs.ButtonHelper(btnPlay, "nextLevel", "nextLevelOver", 
+                "nextLevelOver", false, hitAreaSprite, "nextLevelOver");
+                btnPlay.active = false;
+                stage.addChild(btnPlay);
 
-            if(firstLevel) btnPlay.on("click", resetGame, firstLevel = false, secondLevel = true);
-        
+                btnPlay.on("click", resetGame, firstLevel = false, secondLevel = true);
+            }
+            
         }, 1500);
     }
 
