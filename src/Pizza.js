@@ -23,9 +23,10 @@ class Pizza {
         let b = this._astronautSprite.y - this._sprite.y;
         let c = Math.sqrt((Math.pow(a,2)) + (Math.pow(b, 2)));
         
-        let result = c <= a + b;
+        let result = c <= 32;
         
         if(result) {
+            //createjs.Sound.play("pizzaPick");
             this._sprite.dispatchEvent(this._eventPizzaCaught);
             this._burntPizza();
         }
@@ -44,7 +45,6 @@ class Pizza {
 
     //private functions
     _burntPizza() {
-        //recycle pizza, put back in loop for next level
         this._stage.removeChild(this._sprite);
     }
 

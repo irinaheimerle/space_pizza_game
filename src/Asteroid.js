@@ -71,8 +71,9 @@ class Asteroid {
             // Get distance with Pythagoras
             let c = Math.sqrt((a * a) + (b * b));
 
-            if (c <= 20) {
+            if (c <= 10) {
                 //put sound here
+                createjs.Sound.play("explosion");
                 this._sprite.dispatchEvent(this._hitAstronaut);
                 this._burntAsteroid();
             }
