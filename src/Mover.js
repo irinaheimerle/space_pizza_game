@@ -14,7 +14,7 @@ class Mover {
         this._stage = stage;
         
         this._heightConstraintLow = 100;
-        this._heightConstraintHigh = 400;
+        this._heightConstraintHigh = 300;
         this._widthConstraint = 0;
 
         // sprite not animating on construction
@@ -79,7 +79,7 @@ class Mover {
                 //sprite.rotation = 0;
                 sprite.x = sprite.x + this._speed;
                 
-                if (sprite.x > ((this._stage.canvas.width + width) / 2)) {
+                if (sprite.x > ((this._stage.canvas.width + width) / 1.75)) {
                     sprite.x = -width;
                     
                     //maybe switch backgrounds?

@@ -16,6 +16,8 @@ class Pizza {
         this._sprite.gotoAndStop("pizza");
     }
 
+    get sprite() {return this._sprite;}
+
     // Custom functions for class
     updateMe() {
         //collision detection
