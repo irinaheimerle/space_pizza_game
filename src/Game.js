@@ -44,6 +44,11 @@
         //opening screen set up / btnPlay set up
         openingScreen = new UserInterface(stage,assetManager, 'screen');
 
+        //set the background for the game
+        background = new UserInterface(stage, assetManager, "background");
+        //hide background until ready
+        background.hideMe();
+
         //set up the play button 
         btnPlay = assetManager.getSprite("spritesheet");
         btnPlay.gotoAndStop("playUp");
@@ -92,14 +97,14 @@
         openingScreen.hideMe();
         //hide level complete screen if it exists
         if(levelComplete) levelComplete.hideMe();
-        else if (gameOver) gameOver.hideMe();
+        if (gameOver) gameOver.hideMe();
         
         //remove buttons
         if(btnPlay) stage.removeChild(btnPlay);
         if(btnNext) stage.removeChild(btnNext);
 
-        //set the background for the game
-        background = new UserInterface(stage, assetManager, "background");
+        //show background
+        background.showMe();
         
         //set up the astronaut
         astronaut.setUpMe();
@@ -190,13 +195,13 @@
 
     //when the game is over
     function onGameOver() {
+        stage.removeChild(btnNext);
         gameEnd = true;
         resetGame();
         gameOver = new UserInterface(stage,assetManager, 'screen', 'gameOver');
         btnPlay.x = 20;
         btnPlay.y = 100;
         stage.addChild(btnPlay);
-        
         btnPlay.on("click", resetGame, firstLevel = true, secondLevel = false);
     }
 
@@ -205,11 +210,12 @@
         if(gameEnd) {
             astronaut.lives = 3;
             asteroids = [];
+            for(let slice of pizzaSlices) stage.removeChild(slice);
         }
-
         for(let asteroid of asteroids) stage.removeChild(asteroid);
-        pizzaMax = 0;
         pizzaSlices = [];
+        asteroids = [];
+        pizzaMax = 0;
         pizzaCaught = 0;
         astronaut.resetMe();
         stage.removeChild(displaySlices);

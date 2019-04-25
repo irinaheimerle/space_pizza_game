@@ -37,8 +37,7 @@ class Asteroid {
         let dimensions = this._sprite.getBounds();
 
         // move left
-        this._sprite.x = this._stage.canvas.width + 50;
-        // this._sprite.x = this._randomize(450, 640);
+        this._sprite.x = this._stage.canvas.width + 55;
         this._sprite.y = this._randomize(300,400);
 
         this._sprite.rotation = this._randomize(135, 225);
@@ -63,16 +62,25 @@ class Asteroid {
         bounds.x = this._stage.canvas.width;
         bounds.y = this._stage.canvas.width;
 
-        //collision detection
         if(this._sprite.x < bounds.x && this._sprite.y < bounds.y) {
+            //collision detection
             let a = this._sprite.x - this._astronautSprite.x;
             let b = this._sprite.y - this._astronautSprite.y;
             let c = Math.sqrt((Math.pow(a,2)) + (Math.pow(b, 2)));
 
-            if (c <= 20) {
+            if (c <= 25) {
                 createjs.Sound.play("explosion");
-                this._sprite.dispatchEvent(this._hitAstronaut, this._burntAsteroid);
+                this._sprite.dispatchEvent(this._hitAstronaut);
+                this._burntAsteroid();
             }
+
+            // let asteroidWidth = this._sprite.getBounds().width;
+            // let asteroidHeight = this._sprite.getBounds().height;
+
+            // let astronautWidth = this._sprite.getBounds().width;
+            // let astronautHeight = this._sprite.getBounds().height;
+
+            // if(this._sprite.x + asteroidWidth > this._astronautSprite.x + 20) console.log("hey!");
         }
 
         this._sprite.mover.update();
@@ -83,9 +91,8 @@ class Asteroid {
         this._sprite.removeAllEventListeners();
         // remove displayobject
         this._stage.removeChild(this._sprite);
-        // console.log("asteroid burned");
-
-        // put bug back in the pool
+        
+        // put asteroid back in the pool
         this._active = false;
     }
 }

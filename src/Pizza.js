@@ -25,9 +25,7 @@ class Pizza {
         let b = this._astronautSprite.y - this._sprite.y;
         let c = Math.sqrt((Math.pow(a,2)) + (Math.pow(b, 2)));
         
-        let result = c <= 32;
-        
-        if(result) {
+        if(c <= 32) {
             let pizzaSound = createjs.Sound.play("pizzaPick");
             this._sprite.dispatchEvent(this._eventPizzaCaught);
             this._burntPizza(pizzaSound);
