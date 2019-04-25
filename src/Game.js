@@ -156,7 +156,6 @@
 
     function onLevelOver() {
         window.clearInterval(gameTimer);
-        
         //set a timeout so the screen popping up isn't so jarring
         setTimeout(() => {
             if(firstLevel) levelComplete = new UserInterface(stage, assetManager, 'screen', 'levelComplete');
@@ -182,7 +181,6 @@
     //when the astronaut is hit
     function onLoseLives() {
         astronaut.lives -= 1;
-        
         //swap out the label
         stage.removeChild(livesLabel);
         livesLabel.gotoAndStop(`lives${astronaut.lives}`);
@@ -214,12 +212,11 @@
         }
         for(let asteroid of asteroids) stage.removeChild(asteroid);
         pizzaSlices = [];
-        asteroids = [];
         pizzaMax = 0;
         pizzaCaught = 0;
         astronaut.resetMe();
         stage.removeChild(displaySlices);
-        startGame();
+        if(!gameEnd) startGame();
     }
 
     //keyboard event listeners
