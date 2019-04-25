@@ -2,7 +2,6 @@ class UserInterface {
     constructor(stage, assetManager, type, subtype) {
         //this local stage will point to the passed in stage
         this._stage = stage;
-        UserInterface.levelStart = false;
         
         //build sprite based on type
         if(type === 'background')  {
@@ -47,13 +46,6 @@ class UserInterface {
     get sprite() {
         return this._sprite;
     }
-
-    // _onPlay() {
-    //     this._stage.dispatchEvent(this._startGame);
-    //     return true;
-    // }
-
-    
 
     
 }
