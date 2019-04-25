@@ -4,8 +4,7 @@ class Mover {
         // construct custom event object for object moving off stage
         this._eventStageExit = new createjs.Event("stageExit", true);
         this._eventStageExitLeft = new createjs.Event("stageExitLeft", true);
-        this._propStageExit = new createjs.Event("propStageExit", true);
-
+        
         // private property variables
         this._speed = 4;
         this._sprite = sprite;
@@ -79,14 +78,15 @@ class Mover {
                 //sprite.rotation = 0;
                 sprite.x = sprite.x + this._speed;
                 
-                if (sprite.x > ((this._stage.canvas.width + width) / 1.75)) {
+                
+                // check to see if it's close to the edge or on next screen
+                if (sprite.x > ((this._stage.canvas.width + width) / 1.85)) {
                     sprite.x = -width;
                     
-                    //maybe switch backgrounds?
-                    //this._stage.regX = sprite.x;
                     sprite.dispatchEvent(this._eventStageExit);
                 }
-
+                
+            
             } else if (this._direction == Mover.UP) {
                 // moving up
                 //sprite.scaleX = 1;

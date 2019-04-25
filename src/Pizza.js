@@ -30,7 +30,7 @@ class Pizza {
         if(result) {
             let pizzaSound = createjs.Sound.play("pizzaPick");
             this._sprite.dispatchEvent(this._eventPizzaCaught);
-            this._burntPizza();
+            this._burntPizza(pizzaSound);
         }
     }
 
@@ -46,7 +46,8 @@ class Pizza {
     }
 
     //private functions
-    _burntPizza() {
+    _burntPizza(sound) {
+        sound.volume = .2;
         this._stage.removeChild(this._sprite);
     }
 

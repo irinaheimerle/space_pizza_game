@@ -14,11 +14,9 @@ class Asteroid {
         this._active = false;
 
         this._hitAstronaut = new createjs.Event("astronautHit", true);
-
-        this._result;
     }
 
-    // ---------------------------------------------- get/set methods
+    //get / sets
     get active() {
         return this._active;
     }
@@ -27,23 +25,23 @@ class Asteroid {
         this._active = value;
     }    
     
-    // --------------------------------------------- private methods
-    _randomMe(low, high) {
+    // private methods
+    _randomize(low, high) {
         return Math.round(Math.random() * (high - low)) + low;
     }
 
-    // ---------------------------------------------- public methods
+    //public methods
     setUpMe() {
         
         // get bounds of sprite so we can determine width / height
         let dimensions = this._sprite.getBounds();
 
         // move left
-        // this._sprite.x = this._stage.canvas.width;
-        this._sprite.x = this._randomMe(450, 640);
-        this._sprite.y = this._randomMe(300, 400);
+        this._sprite.x = this._stage.canvas.width + 50;
+        // this._sprite.x = this._randomize(450, 640);
+        this._sprite.y = this._randomize(300,400);
 
-        this._sprite.rotation = this._randomMe(135, 225);
+        this._sprite.rotation = this._randomize(135, 225);
 
         this._sprite.on("stageExitDiagonal", this._burntAsteroid, this);
     }
@@ -65,17 +63,15 @@ class Asteroid {
         bounds.x = this._stage.canvas.width;
         bounds.y = this._stage.canvas.width;
 
+        //collision detection
         if(this._sprite.x < bounds.x && this._sprite.y < bounds.y) {
             let a = this._sprite.x - this._astronautSprite.x;
             let b = this._sprite.y - this._astronautSprite.y;
+            let c = Math.sqrt((Math.pow(a,2)) + (Math.pow(b, 2)));
 
-            // Get distance with Pythagoras
-            let c = Math.sqrt((a * a) + (b * b));
-
-            if (c <= 25) {
+            if (c <= 20) {
                 createjs.Sound.play("explosion");
-                this._sprite.dispatchEvent(this._hitAstronaut);
-                this._burntAsteroid();
+                this._sprite.dispatchEvent(this._hitAstronaut, this._burntAsteroid);
             }
         }
 
