@@ -193,30 +193,38 @@
 
     //when the game is over
     function onGameOver() {
-        stage.removeChild(btnNext);
+        // stage.removeChild(btnNext);
         gameEnd = true;
         resetGame();
         gameOver = new UserInterface(stage,assetManager, 'screen', 'gameOver');
-        btnPlay.x = 20;
-        btnPlay.y = 100;
-        stage.addChild(btnPlay);
-        btnPlay.on("click", resetGame, firstLevel = true, secondLevel = false);
+        // btnPlay.x = 20;
+        // btnPlay.y = 100;
+        // stage.addChild(btnPlay);
+        // btnPlay.on("click", resetGame, firstLevel = true, secondLevel = false);
     }
 
     //to reset the game
     function resetGame() {
         if(gameEnd) {
             astronaut.lives = 3;
-            asteroids = [];
-            for(let slice of pizzaSlices) stage.removeChild(slice);
+            // for(let asteroid of asteroids) stage.removeChild(asteroid);
+            // for(let slice of pizzaSlices) stage.removeChild(slice);
+            pizzaSlices = [];
+            pizzaMax = 0;
+            pizzaCaught = 0;
+            astronaut.resetMe();
+            stage.removeChild(displaySlices);
         }
-        for(let asteroid of asteroids) stage.removeChild(asteroid);
-        pizzaSlices = [];
-        pizzaMax = 0;
-        pizzaCaught = 0;
-        astronaut.resetMe();
-        stage.removeChild(displaySlices);
-        if(!gameEnd) startGame();
+        else {
+            for(let asteroid of asteroids) stage.removeChild(asteroid);
+            for(let slice of pizzaSlices) stage.removeChild(slice);
+            pizzaSlices = [];
+            pizzaMax = 0;
+            pizzaCaught = 0;
+            astronaut.resetMe();
+            stage.removeChild(displaySlices);
+            if(!gameEnd) startGame();
+        }
     }
 
     //keyboard event listeners

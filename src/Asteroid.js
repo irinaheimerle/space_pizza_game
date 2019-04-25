@@ -57,6 +57,7 @@ class Asteroid {
     updateMe() {
         if (!this._sprite.mover.moving) return;
 
+        //check to see the bounds
         let bounds = Object;
 
         bounds.x = this._stage.canvas.width;
@@ -68,19 +69,11 @@ class Asteroid {
             let b = this._sprite.y - this._astronautSprite.y;
             let c = Math.sqrt((Math.pow(a,2)) + (Math.pow(b, 2)));
 
-            if (c <= 25) {
+            if (c <= 17) {
                 createjs.Sound.play("explosion");
                 this._sprite.dispatchEvent(this._hitAstronaut);
                 this._burntAsteroid();
             }
-
-            // let asteroidWidth = this._sprite.getBounds().width;
-            // let asteroidHeight = this._sprite.getBounds().height;
-
-            // let astronautWidth = this._sprite.getBounds().width;
-            // let astronautHeight = this._sprite.getBounds().height;
-
-            // if(this._sprite.x + asteroidWidth > this._astronautSprite.x + 20) console.log("hey!");
         }
 
         this._sprite.mover.update();
