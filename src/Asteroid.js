@@ -39,8 +39,9 @@ class Asteroid {
         let dimensions = this._sprite.getBounds();
 
         // move left
-        this._sprite.x = this._stage.canvas.width
-        this._sprite.y = this._randomMe(0, 400);
+        // this._sprite.x = this._stage.canvas.width;
+        this._sprite.x = this._randomMe(450, 640);
+        this._sprite.y = this._randomMe(300, 400);
 
         this._sprite.rotation = this._randomMe(135, 225);
 

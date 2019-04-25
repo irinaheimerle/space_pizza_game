@@ -65,15 +65,16 @@
         //create asteroid objects to use during the entire game
         for (let i=0; i<10; i++) asteroids.push(new Asteroid(stage, assetManager, astronaut));
 
+        //lives label ui
         livesLabel = assetManager.getSprite("spritesheet");
-        livesLabel.gotoAndStop('lives2');
-        livesLabel.x = 100;
-        livesLabel.y = 100;
+        livesLabel.gotoAndStop(`lives${astronaut.lives}`);
+        livesLabel.x = 250;
+        livesLabel.y = -50;
 
         btnPlay.on("click", startGame, firstLevel = true);
         
         stage.on("pizzaCaught", onPizzaCaught);
-        stage.on("levelOver", onLevelOver);
+        stage.on("levelOver", onLevelOver, astronaut.stopMe());
         stage.on("astronautHit", onLoseLives);
         stage.on("outOfLives", onGameOver);
 
@@ -84,9 +85,10 @@
 
     //game functions
     function startGame() {
+        stage.addChild(livesLabel);
+
         //hide intial game screens / btnPlay
         openingScreen.hideMe();
-        // stage.addChild(livesLabel);
         //hide level complete screen if it exists
         if(levelComplete) levelComplete.hideMe();
         else if(gameOver) gameOver.hideMe();
@@ -168,25 +170,30 @@
                 stage.addChild(btnNext);
                 btnNext.on("click", resetGame, firstLevel = false, secondLevel = true);
             }
-        }, 1500);
+        }, 1300);
     }
 
     //when the astronaut is hit
     function onLoseLives() {
         astronaut.lives -= 1;
-        astronaut.alpha = .4;
+        
+        stage.removeChild(livesLabel);
+        livesLabel.gotoAndStop(`lives${astronaut.lives}`);
+        stage.addChild(livesLabel);
+
         if(astronaut.lives <= 0) stage.dispatchEvent("outOfLives");
+        
     }
 
     //when the game is over
     function onGameOver() {
-        astronaut.stopMe();
         gameOver = new UserInterface(stage,assetManager, 'screen', 'gameOver');
         btnPlay.x = 15;
         btnPlay.y = 100;
         stage.addChild(btnPlay);
+        for(let asteroid of asteroids) stage.removeChild(asteroid);
 
-        btnPlay.on("click", resetGame);
+        btnPlay.on("click", resetGame, astronaut.stopMe());
     }
 
     //to reset the game
@@ -194,6 +201,7 @@
         pizzaMax = 0;
         pizzaSlices = [];
         pizzaCaught = 0;
+        astronaut.resetMe();
         stage.removeChild(displaySlices);
         startGame();
     }
@@ -229,6 +237,29 @@
             stage.addChild(displaySlices);
         }
 
+        // if(firstLevel) {
+        //     if(sliceExists == false) {
+        //         displaySlices.gotoAndStop(`pie4slice${pizzaCaught}`);
+        //         stage.addChild(displaySlices);
+        //         sliceExists = true;
+        //     } else {
+        //         stage.removeChild(displaySlices);
+        //         displaySlices.gotoAndStop(`pie4slice${pizzaCaught}`);
+        //         stage.addChild(displaySlices);
+        //     }
+        // } else {
+        //     if(sliceExists == false) {
+        //         displaySlices.gotoAndStop(`slice${pizzaCaught}`);
+        //         stage.addChild(displaySlices);
+        //         sliceExists = true;
+        //     } else {
+        //         stage.removeChild(displaySlices);
+        //         displaySlices.gotoAndStop(`slice${pizzaCaught}`);
+        //         stage.addChild(displaySlices);
+        //     }
+        // }
+        
+
         if(pizzaCaught === pizzaMax) stage.dispatchEvent("levelOver");
         
     }
@@ -243,14 +274,17 @@
             //render out the slice again if too close to the previous one
             if(x > 0) {
                 let previousSlice = pizzaSlices[x - 1].sprite;
-                if(currentSlice.x <= previousSlice.x - 50 || currentSlice.x >= previousSlice.x - 50 || currentSlice.y <= previousSlice.y - 50 || currentSlice.y >= previousSlice.y - 50) currentSlice.x += 175;
-                
+                if(currentSlice.x <= previousSlice.x - 50 || currentSlice.x >= previousSlice.x - 50 || currentSlice.y <= previousSlice.y - 50 || currentSlice.y >= previousSlice.y - 50) {
+                    currentSlice.x += 175;
+                    currentSlice.y += 125;
+                }
             }
             
             stage.addChild(currentSlice);
         }
     }
 
+    //add asteroid to the display list
     function onAddAsteroid() {
         asteroids.forEach((asteroid) => {
             if(asteroid.active === false) {

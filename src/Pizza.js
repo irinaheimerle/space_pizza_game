@@ -28,7 +28,7 @@ class Pizza {
         let result = c <= 32;
         
         if(result) {
-            //createjs.Sound.play("pizzaPick");
+            let pizzaSound = createjs.Sound.play("pizzaPick");
             this._sprite.dispatchEvent(this._eventPizzaCaught);
             this._burntPizza();
         }

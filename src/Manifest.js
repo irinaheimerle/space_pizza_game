@@ -10,6 +10,6 @@ let manifest = [
     {
         src:"lib/pizzaPick.ogg",
         id:"pizzaPick",
-        duration: 4
+        duration: 150
     }    
 ];

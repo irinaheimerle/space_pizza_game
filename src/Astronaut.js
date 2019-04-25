@@ -41,6 +41,6 @@ class Astronaut {
 
     resetMe() {
         this._sprite.x = 0;
-        this._sprite.y = 50;
+        this._sprite.y = 275;
     }
 }
